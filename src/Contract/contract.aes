@@ -1,0 +1,22 @@
+payable contract CharityTransfer =
+
+  record state =
+    { user1 : address
+    , user2 : address
+    , amount : int
+    , isConfirmed : bool }
+
+  entrypoint init() : state =
+    { user1 = Call.caller,
+      user2 = ak_2dBSuFMCZ6NJCfwsLJdyHjaXhQ7ap6ohizhMvsE3i6t8YQmNWh,  
+      amount = 0,  
+      isConfirmed = false }
+
+  payable stateful entrypoint sendMoney() =
+    require(!state.isConfirmed, "Transaction already confirmed or rejected")
+    require(Call.value > 0, "Amount should be greater than 0")
+    put(state{ amount = state.amount + Call.value })
+
+
+  entrypoint getContractDetails() : state =
+    state
